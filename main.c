@@ -4,7 +4,8 @@
 #include <locale.h>
 
 // Declarando a estrutura de Cadastro.
-struct cadastro {
+struct cadastro
+{
     char nome_arquivo[50];
     char tema[50];
     char habilidade[50];
@@ -13,44 +14,50 @@ struct cadastro {
     char indicacao_atendimento[50];
 };
 
-// Declara um array de cadastros e variáveis para rastrear o número de elementos e um contador.
+// Declara um array de cadastros e variaveis para rastrear o número de elementos e um contador.
 struct cadastro c_cadastro[5];
 int i;
 int n_cadastro = 0;
 
-// Função para cadastrar um novo x_cadastro no vetor c_cadastro que não tem retorno, apenas faz o cadastro.
-void cadastrar_arquivo(struct cadastro x_cadastro) {
+// Funï¿½ï¿½o para cadastrar um novo x_cadastro no vetor c_cadastro que não tem retorno, apenas faz o cadastro.
+void cadastrar_arquivo(struct cadastro x_cadastro)
+{
     c_cadastro[n_cadastro] = x_cadastro;
     n_cadastro++;
 }
 
 // Função para ler as informações do novo cadastro de arquivo
-struct cadastro lerDados() {
+struct cadastro lerDados()
+{
     struct cadastro reservado;
+    printf("\n-------------- Bem vindo ao Software da Clinica --------------\n");
+    printf("\n-------------------- Cadastro de materiais --------------------\n");
     printf("Digite o nome do arquivo: ");
     fflush(stdin);
     fgets(reservado.nome_arquivo, 50, stdin);
-    printf("Digite o tema: ");
+    printf("-------------------------\nDigite o tema: ");
     fflush(stdin);
     fgets(reservado.tema, 50, stdin);
-    printf("Digite a habilidade: ");
+    printf("-------------------------\nDigite a habilidade: ");
     fflush(stdin);
     fgets(reservado.habilidade, 50, stdin);
-    printf("Digite o nome do autor: ");
+    printf("-------------------------\nDigite o nome do autor: ");
     fflush(stdin);
     fgets(reservado.nome_autor, 50, stdin);
-    printf("Digite o formato do arquivo: ");
+    printf("-------------------------\nDigite o formato do arquivo: ");
     fflush(stdin);
     fgets(reservado.formato, 50, stdin);
-    printf("Digite a indicação do atendimento: ");
+    printf("-------------------------\nDigite a indicação do atendimento: ");
     fflush(stdin);
     fgets(reservado.indicacao_atendimento, 50, stdin);
     return reservado;
 };
 
 // Função para buscar todos os arquivos na tela
-void buscaArquivo() {
-    for (i = 0; i < n_cadastro; i++) {
+void buscaArquivo()
+{
+    for (i = 0; i < n_cadastro; i++)
+    {
         printf("Codigo do arquivo: %d\n", i + 1);
         printf("Nome do Arquivo: %s", c_cadastro[i].nome_arquivo);
         printf("Tema: %s", c_cadastro[i].tema);
@@ -62,30 +69,69 @@ void buscaArquivo() {
     }
 }
 
-// Função para exibir o menu de opções, que retorna um valor int, que é o número digitado pelo usuário.
-int menu() {
+// Função para exibir o menu de opções, que retorna um valor int, que lê o número digitado pelo usuário.
+int menu()
+{
     setlocale(LC_ALL, "Portuguese_Brazil");
 
     int opcao;
 
-    printf("\n-------------- Bem vindo ao Software da Clinica --------------\n");
-    printf("\n----------------------- Menu de opções -----------------------\n");
-    printf("Escolha uma opção abaixo\n");
-    printf("1 - Cadastrar\n");
-    printf("2 - Buscar\n");
-    printf("3 - Alterar\n");
-    printf("4 - Apagar\n");
-    printf("0 - Sair\n");
+    printf("\n-------------- Catálogo de Materiais Terapêuticos --------------\n");
+    printf("\n------------------------ Menu de opções ------------------------");
+    printf("\n------------------ Escolha uma opção abaixo --------------------\n\n");
+    printf("1 - Cadastrar | ");
+    printf("2 - Listar cadastros |  ");
+    printf("3 - Apagar cadastro | ");
+    printf("4 - Alterar cadastro| ");
+    printf("0 - Sair | ");
     scanf("%d", &opcao);
 
     return opcao;
 }
+void apagar(int posicao)
+{
+    int indice = posicao - 1;
+    int i = 0;
 
-//Função principal, aqui começa o programa.
-int main() {
+    if ((posicao < 1) || (posicao > n_cadastro)) {
+        printf("\nNenhum registro encontrado!\n");
+        return;
+    }
+ 
+    // 1. caso - remover no final do vetor
+    if (posicao == n_cadastro) {
+        n_cadastro--;
+        return;
+    }
+ 
+    // 2. remove qualquer outra posicao
+    for (i=indice; i<n_cadastro; i++) {
+        c_cadastro[i] = c_cadastro[i + 1];
+    }
+    n_cadastro--;
+}
+void alterar(int posicao)
+{
+    if (posicao < 1 || posicao > n_cadastro) {
+        printf("\nNenhum registro encontrado!\n");
+        return;
+    }
+
+    printf("\nDigite os novos dados:\n");
+    struct cadastro novo_cadastro = lerDados();
+
+    c_cadastro[posicao - 1] = novo_cadastro;
+
+    printf("\nCadastro alterado com sucesso!\n");
+}
+
+// Função principal, aqui começa o programa.
+int main()
+{
 
     int opcao_selecionada;
     struct cadastro novo_cadastro;
+    int r;
 
     do
     {
@@ -105,6 +151,16 @@ int main() {
             break;
         case 2:
             buscaArquivo();
+            break;
+        case 3:
+            printf("Digite a posicao que deseja excluir: ");
+            scanf("%d", &r);
+            apagar(r);
+            break;
+        case 4:
+            printf("Digite a posição que deseja alterar: ");
+            scanf("%d", &r);
+            alterar(r);
             break;
 
         default:
